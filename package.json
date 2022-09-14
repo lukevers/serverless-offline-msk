@@ -6,11 +6,7 @@
   "types": "lib/index.d.ts",
   "type": "module",
   "exports": "./lib/index.js",
-  "scripts": {
-    "build": "yarn run clean && yarn run bundle",
-    "bundle": "tsc",
-    "clean": "rm lib/*"
-  },
+  "private": false,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/lukevers/serverless-offline-msk.git"
@@ -27,6 +23,24 @@
     "printWidth": 100,
     "singleQuote": true,
     "trailingComma": "all"
+  },
+  "keywords": [
+    "serverless-offline-msk",
+    "serverless-offline",
+    "serverless",
+    "serverless-plugin",
+    "serverless-offline-plugin",
+    "lambda",
+    "kafka",
+    "consumer",
+    "aws-msk",
+    "msk",
+    "sls"
+  ],
+  "scripts": {
+    "build": "yarn run clean && yarn run bundle",
+    "bundle": "tsc",
+    "clean": "rm lib/*"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.103",
