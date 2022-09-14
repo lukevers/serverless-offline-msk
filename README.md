@@ -63,4 +63,4 @@ functions:
 
 ## LICENSE
 
-See [./LICENSE](./LICENSE) for more info.
+See [LICENSE](./LICENSE) for more info.
