@@ -20,6 +20,6 @@ export default class ServerlessOfflineAwsMskPlugin {
     kafka: Kafka;
     constructor(serverless: Serverless, options: Options);
     init(): void;
-    connectAndListen(fnName: string, fn: FunctionDefinitionHandler | FunctionDefinitionImage, event: ServerlessMSKEvent): Promise<void>;
+    connectAndListen(fn: FunctionDefinitionHandler | FunctionDefinitionImage, event: ServerlessMSKEvent): Promise<void>;
     end(): void;
 }

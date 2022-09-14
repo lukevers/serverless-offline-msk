@@ -1,4 +1,4 @@
-import AWS from 'aws-sdk';
+import AWS, { Lambda } from 'aws-sdk';
 import { MSKRecord } from 'aws-lambda';
 import { Hooks } from 'serverless/classes/Plugin';
 import { Msk } from 'serverless/plugins/aws/provider/awsProvider';
@@ -68,7 +68,7 @@ export default class ServerlessOfflineAwsMskPlugin {
 
   init() {
     // Loop over every function in the service and look for MSK events.
-    for (const [name, fn] of Object.entries(this.serverless?.service?.functions || {})) {
+    for (const [_name, fn] of Object.entries(this.serverless?.service?.functions || {})) {
       // Can't do anything else if the config is bad
       if (!fn.events || !Array.isArray(fn.events)) {
         break;
@@ -80,16 +80,23 @@ export default class ServerlessOfflineAwsMskPlugin {
         .map((event) => getMskEvent(event.msk as ServerlessMSKEvent));
 
       // Loop over each event, and run them async
-      mskEvents.forEach(async (event) => this.connectAndListen(name, fn, event));
+      mskEvents.forEach(async (event) => this.connectAndListen(fn, event));
     }
   }
 
   async connectAndListen(
-    fnName: string,
     fn: FunctionDefinitionHandler | FunctionDefinitionImage,
     event: ServerlessMSKEvent,
   ) {
-    const lambdaParams = { endpoint: 'http://localhost:3002' };
+    const lambdaParams: Lambda.Types.ClientConfiguration = {
+      endpoint: 'http://localhost:3002', // do we need to get this dynamically?
+      region: 'us-east-1', // does not matter locally, but maybe get dynamically from sls?
+      credentials: {
+        accessKeyId: 'root',
+        secretAccessKey: 'root',
+      },
+    };
+
     const lambda = new AWS.Lambda(lambdaParams);
 
     // From what I've seen OOTB, every consumer is a separate group ID.
@@ -131,9 +138,9 @@ export default class ServerlessOfflineAwsMskPlugin {
           await heartbeat();
         }
 
-        const invokeParams = {
-          FunctionName: fnName,
-          InvocationType: 'RequestResponse',
+        const invokeParams: Lambda.Types.InvocationRequest = {
+          FunctionName: `${fn.name}`,
+          InvocationType: 'Event',
           LogType: 'None',
           Payload: JSON.stringify({
             eventSourceArn: 'arn:*',
