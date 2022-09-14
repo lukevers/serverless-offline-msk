@@ -1,0 +1,16 @@
+{
+  "name": "serverless-offline-msk-docker-compose-single-broker",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "sls offline start --stage=dev"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.104",
+    "esbuild": "^0.15.7",
+    "serverless": "^3.22.0",
+    "serverless-esbuild": "^1.32.8",
+    "serverless-offline": "^8.8.1",
+    "serverless-offline-msk": "file:../../"
+  }
+}

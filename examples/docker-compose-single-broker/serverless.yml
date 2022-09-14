@@ -1,0 +1,34 @@
+# prettier-ignore
+service: docker-compose-single-broker
+frameworkVersion: '3'
+provider:
+  name: aws
+  runtime: nodejs16.x
+  stage: ${opt:stage, "dev"}
+  region: ${opt:region, "us-east-1"}
+plugins:
+  - serverless-esbuild
+  - serverless-offline
+  - serverless-offline-msk
+
+custom:
+  serverless-offline-msk:
+    allowAutoTopicCreation: true
+    brokers:
+      - "kafka:19092"
+
+functions:
+  consumerAnimals:
+    handler: src/animals.ts
+    name: consumer-animals
+    events:
+      - msk:
+          arn: 'arn:*' # would need to be a real MSK ARN in prod
+          topic: kitten_feed
+          batchSize: 100
+          startingPosition: LATEST
+      - msk:
+          arn: 'arn:*' # would need to be a real MSK ARN in prod
+          topic: kitten_pet
+          batchSize: 1
+          startingPosition: LATEST

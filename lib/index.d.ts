@@ -1,10 +1,18 @@
-import ServerlessPlugin, { Hooks } from 'serverless/classes/Plugin';
+import { Hooks } from 'serverless/classes/Plugin';
+import { Msk } from 'serverless/plugins/aws/provider/awsProvider';
 import Serverless, { Options, FunctionDefinitionHandler, FunctionDefinitionImage } from 'serverless';
 import { Kafka } from 'kafkajs';
-import { CustomOptions } from './options';
-import { ServerlessMSKEvent } from './msk';
+export interface CustomOptions {
+    allowAutoTopicCreation: boolean;
+    clientId: string;
+    brokers: Array<string>;
+}
+export interface ServerlessMSKEvent extends Msk {
+    maximumBatchingWindow?: number;
+}
+export declare const getMskEvent: (event: Msk) => ServerlessMSKEvent;
 export declare const defaultKafkaClientId = "serverless-offline-msk-client";
-export default class ServerlessOfflineAwsMskPlugin implements ServerlessPlugin {
+export default class ServerlessOfflineAwsMskPlugin {
     serverless: Serverless;
     options: Options;
     hooks: Hooks;

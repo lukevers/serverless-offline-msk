@@ -1,18 +1,43 @@
 import AWS from 'aws-sdk';
 import { MSKRecord } from 'aws-lambda';
-import ServerlessPlugin, { Hooks } from 'serverless/classes/Plugin';
+import { Hooks } from 'serverless/classes/Plugin';
+import { Msk } from 'serverless/plugins/aws/provider/awsProvider';
 import Serverless, {
   Options,
   FunctionDefinitionHandler,
   FunctionDefinitionImage,
 } from 'serverless';
 import { Kafka } from 'kafkajs';
-import { CustomOptions } from './options';
-import { getMskEvent, ServerlessMSKEvent } from './msk';
+
+export interface CustomOptions {
+  allowAutoTopicCreation: boolean;
+  clientId: string;
+  brokers: Array<string>;
+}
+
+// Quick workaround to add support for other attributes
+export interface ServerlessMSKEvent extends Msk {
+  maximumBatchingWindow?: number;
+}
+
+const defaultEvent: ServerlessMSKEvent = {
+  arn: 'arn:*',
+  topic: '',
+  batchSize: 100,
+  maximumBatchingWindow: 1,
+  startingPosition: 'LATEST',
+};
+
+export const getMskEvent = (event: Msk): ServerlessMSKEvent => {
+  return {
+    ...defaultEvent,
+    ...event,
+  };
+};
 
 export const defaultKafkaClientId = 'serverless-offline-msk-client';
 
-export default class ServerlessOfflineAwsMskPlugin implements ServerlessPlugin {
+export default class ServerlessOfflineAwsMskPlugin {
   serverless: Serverless;
   options: Options;
   hooks: Hooks;

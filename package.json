@@ -4,11 +4,12 @@
   "description": "A serverless offline plugin that enables AWS MSK events",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
+  "type": "module",
+  "exports": "./lib/index.js",
   "scripts": {
-    "build": "yarn run clean && yarn run types && yarn run bundle",
-    "bundle": "esbuild src/index.ts --bundle --outfile=lib/index.js --platform=node",
-    "clean": "rm lib/*",
-    "types": "tsc --emitDeclarationOnly"
+    "build": "yarn run clean && yarn run bundle",
+    "bundle": "tsc",
+    "clean": "rm lib/*"
   },
   "repository": {
     "type": "git",
@@ -33,7 +34,6 @@
     "@types/serverless": "^3.12.8",
     "@typescript-eslint/eslint-plugin": "^5.33.0",
     "@typescript-eslint/parser": "^5.33.0",
-    "esbuild": "^0.15.7",
     "eslint": "^8.21.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
@@ -44,5 +44,10 @@
     "aws-lambda": "^1.0.7",
     "aws-sdk": "^2.1214.0",
     "kafkajs": "^2.2.0"
+  },
+  "engines": {
+    "npm": "please-use-yarn",
+    "yarn": ">=1.22.0",
+    "node": ">=16.0.0"
   }
 }
