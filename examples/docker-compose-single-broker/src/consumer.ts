@@ -1,5 +1,7 @@
 import { Handler, MSKEvent } from 'aws-lambda';
 
 export const handler: Handler = async (event: MSKEvent) => {
-  console.log('CONSUMER TRIGGERED!!!');
+  console.log('TRIGGERED EVENT');
+  console.log(event);
+  console.log('CONSUMED EVENT');
 };

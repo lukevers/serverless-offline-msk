@@ -7,7 +7,7 @@ provider:
   stage: ${opt:stage, "dev"}
   region: ${opt:region, "us-east-1"}
 plugins:
-  - serverless-esbuild
+  - serverless-plugin-typescript
   - serverless-offline
   - serverless-offline-msk
 
@@ -18,8 +18,16 @@ custom:
       - "kafka:19092"
 
 functions:
+  producer:
+    handler: src/producer.handler
+    name: producer
+    environment:
+      KAFKA_BROKERS: "kafka:19092"
+    events:
+      - schedule: rate(1 minute)
+
   consumerAnimals:
-    handler: src/animals.ts
+    handler: src/consumer.handler
     name: consumer-animals
     events:
       - msk:

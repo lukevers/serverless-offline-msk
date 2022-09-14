@@ -1,10 +1,12 @@
 version: "3.8"
 services:
-  app-consumers:
-    image: node:16-alpine
+  app:
+    image: node:16
     command: "yarn run dev"
+    working_dir: /usr/src
     volumes:
       - .:/usr/src
+      - /usr/src/.build
     depends_on:
       - kafka
   kafka:
