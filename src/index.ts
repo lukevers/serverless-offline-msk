@@ -88,6 +88,11 @@ export default class ServerlessOfflineAwsMskPlugin {
     fn: FunctionDefinitionHandler | FunctionDefinitionImage,
     event: ServerlessMSKEvent,
   ) {
+    // If the event is disabled, stop.
+    if (event.enabled === false) {
+      return;
+    }
+
     const lambdaParams: Lambda.Types.ClientConfiguration = {
       endpoint: 'http://localhost:3002', // do we need to get this dynamically?
       region: 'us-east-1', // does not matter locally, but maybe get dynamically from sls?
